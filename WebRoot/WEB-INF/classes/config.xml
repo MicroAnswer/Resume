@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseConfigs>
+	<!-- 数据库信息配置文件，以Id来区分不同的数据库配置 -->
+	<config id="1">
+		<databaseName>web</databaseName><!-- 数据库名称 -->
+		<databaseUserName>root</databaseUserName><!-- 数据库用户名 -->
+		<databaseUserPassword>1234</databaseUserPassword><!-- 数据库用户密码 -->
+		<databaseUrl>jdbc:mysql://127.0.0.1/web</databaseUrl><!-- 数据库地址 -->
+		<databasePort>3306</databasePort><!-- 数据库端口 -->
+		<databaseDriver>com.mysql.jdbc.Driver</databaseDriver><!-- 数据库驱动 -->
+	</config>
+	<config id="2">
+		<databaseName>filedata</databaseName>
+		<databaseUserName>root</databaseUserName>
+		<databaseUserPassword>1234</databaseUserPassword>
+		<databaseUrl>jdbc:mysql://127.0.0.1</databaseUrl>
+		<databasePort>3306</databasePort>
+		<databaseDriver>com.mysql.jdbc.Driver</databaseDriver>
+	</config>
+</databaseConfigs>
