@@ -27,6 +27,7 @@ body {
 	background: url(<s:home/>/bg/home_main_bg.png);
 	background-attachment: fixed;
 }
+
 body * {
 	margin: 0px;
 	padding: 0px;
@@ -147,7 +148,8 @@ body * {
 	</s:main>
 	<div
 		style="width: 800px; height: 90px; background-color: #000000; margin: 10px auto 0px auto; text-align: center; color: #ffffff; padding-top: 10px;">
-		<div style="margin-top: 10px">制作： 范雪蛟　　QQ:374288225</div>电话：13541227014 <br />
+		<div style="margin-top: 10px">制作： 范雪蛟 QQ:374288225</div>
+		电话：13541227014 <br />
 		<s:showTime />
 
 	</div>

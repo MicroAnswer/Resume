@@ -1,7 +1,7 @@
 <%@page import="java.util.*"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8" isErrorPage="true"%>
-	<%@ taglib uri="com.Answer.CustomSimpleTag" prefix="s" %>
+<%@ taglib uri="com.Answer.CustomSimpleTag" prefix="s"%>
 <!DOCTYPE>
 <html>
 <head>
@@ -23,7 +23,8 @@
 <title>出现错误</title>
 </head>
 <body>
-	<a href='<s:home/>/home.jsp' style="width: 100px; height:40px; display: block; background-color: #ffffff; margin: 0px auto 0px auto; line-height: 40px;text-align: center; border-radius:5px; text-decoration: none; border: 1px #000000 solid;">回到主页</a>
+	<a href='<s:home/>/home.jsp'
+		style="width: 100px; height: 40px; display: block; background-color: #ffffff; margin: 0px auto 0px auto; line-height: 40px; text-align: center; border-radius: 5px; text-decoration: none; border: 1px #000000 solid;">回到主页</a>
 	<div
 		style="margin: 12px auto 0px auto; padding: 0px; width: 696px; height: 600px; border: 2px solid #000000; border-radius: 15px; background: rgba(255, 255, 255, 0.55); color: #000000;">
 		<p
@@ -44,8 +45,10 @@
 					case 502:out.write("Web 服务器作为网关或代理服务器时收到无效的响应");break;
 					default:out.write("服务器还没准备好，请稍后再试");break;
 					}
-					%>)</p>
-		<p style="padding-left: 15px; padding-right: 15px; width: 650px; height: 600px;"><%=mexception%></p>
+					%>)
+		</p>
+		<p
+			style="padding-left: 15px; padding-right: 15px; width: 650px; height: 600px;"><%=mexception%></p>
 	</div>
 </body>
 <script type="text/javascript" src='<s:home/>/js/index.js'></script>

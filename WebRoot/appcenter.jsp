@@ -46,7 +46,6 @@
 <link rel="shortcut icon" href='<s:home/>/bg/fan.ico' />
 <base href="<%=basePath%>">
 <style type="text/css">
-
 body {
 	background: url(<s:home/>/bg/home_main_bg.png);
 	background-attachment: fixed;

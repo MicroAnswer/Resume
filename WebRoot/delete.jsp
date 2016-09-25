@@ -52,8 +52,8 @@
 				<td><input type="checkbox" /></td>
 				<td>${uu.name}</td>
 				<td>${uu.age}</td>
-				<td><c:if test="${uu.sex == 1}">男</c:if>
-					<c:if test="${uu.sex != 1}">女</c:if></td>
+				<td><c:if test="${uu.sex == 1}">男</c:if> <c:if
+						test="${uu.sex != 1}">女</c:if></td>
 				<td>${uu.birthday}</td>
 				<td>${uu.QQ}</td>
 				<td>${uu.tel}</td>

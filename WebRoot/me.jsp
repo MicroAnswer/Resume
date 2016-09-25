@@ -19,12 +19,11 @@
 <link rel="shortcut icon" href='<s:home/>/bg/fan.ico' />
 <base href="<%=basePath%>">
 <style type="text/css">
-
-
 body {
 	background: url(<s:home/>/bg/home_main_bg.png);
 	background-attachment: fixed;
 }
+
 body div * {
 	border-radius: 5px;
 	float: left;
@@ -40,6 +39,7 @@ body div * {
 	width: 200px;
 	height: 200px;
 }
+
 .headDiv a {
 	border-radius: 0px 0px 5px 5px;
 	float: left;
@@ -49,7 +49,8 @@ body div * {
 	margin-top: -50px;
 	color: #ffffff;
 	display: none;
-	line-height: 50px; text-align : center;
+	line-height: 50px;
+	text-align: center;
 	font-size: 20px;
 	background-color: rgba(2, 2, 2, 0.5);
 	text-align: center;
@@ -64,25 +65,28 @@ body div * {
 <body>
 	<s:main bgColor="#ffffff" height="700">
 		<a href='<s:home/>/home.jsp'
-			style="float:right; margin-top: -25px; color:#ffffff; margin-right: 20px;">返回主页</a>
+			style="float: right; margin-top: -25px; color: #ffffff; margin-right: 20px;">返回主页</a>
 		<div class="headDiv" id="headDiv">
-		<img alt="" src='<s:home/>${user.head}'   width="200" height="200"  style="width: 200px; height:200px;">
-			<a id="cha" href='<s:home/>/changehead.jsp'>修改头像</a>
+			<img alt="" src='<s:home/>${user.head}' width="200" height="200"
+				style="width: 200px; height: 200px;"> <a id="cha"
+				href='<s:home/>/changehead.jsp'>修改头像</a>
 		</div>
-		<div style="width:300px; height:250px;">
-		<p style="font-size: 50px; margin-top: 40px; color:#116633;  float:none;">${user.name }</p>
-		<p style="font-size: 30px; margin-top:10px; float:none;">QQ:${user.QQ }</p>
-		<p style="font-size: 30px; margin-top:10px;  float:none; ">手机:${user.tel }</p>
+		<div style="width: 300px; height: 250px;">
+			<p
+				style="font-size: 50px; margin-top: 40px; color: #116633; float: none;">${user.name }</p>
+			<p style="font-size: 30px; margin-top: 10px; float: none;">QQ:${user.QQ }</p>
+			<p style="font-size: 30px; margin-top: 10px; float: none;">手机:${user.tel }</p>
 		</div>
 		<hr style="width: 100%;" />
-		<a style="width: 100%; background-color: rgba(100,100,200,0.6); border-radius:0px; height:30px; text-align: center; line-height: 30px; cursor: pointer;" href='<s:home/>/alterme.jsp'>修改我的信息</a>
+		<a
+			style="width: 100%; background-color: rgba(100, 100, 200, 0.6); border-radius: 0px; height: 30px; text-align: center; line-height: 30px; cursor: pointer;"
+			href='<s:home/>/alterme.jsp'>修改我的信息</a>
 		<h4 style="line-height: 40px; margin-top: 25px; margin-left: 40px;">
 			生日：${user.birthday }<br />年龄：${user.age }<br />性别：
 			<c:if test="${user.sex == 1}">男</c:if>
 			<c:if test="${user.sex!=1 }">女</c:if>
-			<br />地址：${user.addr}<br />Email:${user.email}<br/>个人说明：${user.info}
-			<br/>
-			${hint }
+			<br />地址：${user.addr}<br />Email:${user.email}<br />个人说明：${user.info}
+			<br /> ${hint }
 		</h4>
 	</s:main>
 </body>

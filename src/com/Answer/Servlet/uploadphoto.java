@@ -23,6 +23,9 @@ import org.json.JSONObject;
  */
 @WebServlet("/uploadphoto")
 public class uploadphoto extends HttpServlet {
+
+	private static final String DISK = "E:";
+
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -42,21 +45,62 @@ public class uploadphoto extends HttpServlet {
 		try {
 			List<FileItem> parseRequest = SfileUpload.parseRequest(request);
 			if (parseRequest.size() > 0) {
+				File dir = new File(DISK + "/photo/");
+
+				if (!dir.exists()) {
+					dir.mkdirs();
+				}
+
+				String userdir = request.getParameter("dir");
+
+				if (userdir != null && !userdir.equals("")) {
+					dir = new File(dir, userdir);
+
+					if (!dir.exists()) {
+						dir.mkdirs();
+					}
+				}
+
+				File uploadedfile = null;
+
 				// 遍历集合
 				for (FileItem f : parseRequest) {
 					if (f.isFormField()) {// 普通字段信息
+						String dirName = f.getFieldName();
+						if ("dir".equals(dirName)) {
+							String ud = f.getString("UTF-8");
+							if (!ud.equals(dir.getName())) {
+								dir = new File(dir, ud);
+								if (!dir.exists()) {
+									dir.mkdirs();
+									if (uploadedfile != null) {
+										uploadedfile.renameTo(new File(dir, uploadedfile.getName()));
+									}
+								}
+							}
+						}
 
 					} else {// 文件内容
 						FileName = f.getName();
-						String headname = "E:/photo/" + FileName;
+						// String headname = "E:/photo/" + FileName;
 						stream = f.getInputStream();
-						outstream = new FileOutputStream(headname);
+
+						File file = new File(dir, FileName);
+						outstream = new FileOutputStream(file);
 						byte data[] = new byte[2048];
 						int datasize = 0;
 						while ((datasize = stream.read(data)) != -1) {
 							outstream.write(data, 0, datasize);
 						}
 						outstream.flush();
+
+						outstream.close();
+						outstream = null;
+						stream.close();
+						stream = null;
+
+						uploadedfile = file;
+
 						JSONObject jo = new JSONObject();
 						jo.put("status", true);
 						jo.put("msg", "文件[" + FileName + "]上传成功");
