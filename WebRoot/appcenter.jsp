@@ -13,7 +13,7 @@
 	//下面开始初始化（文件数据）
 	FileDatabaseManager Fmanager = Application.getFiledatabaseManager(session);
 
-	File rootf = new File("E:/software/");
+	File rootf = new File("D:/Resume/software/");
 	File[] files = rootf.listFiles(new FileFilter() {
 		public boolean accept(File pathname) {
 			return pathname.canRead() && (!pathname.isHidden()) && pathname.isFile();

@@ -152,7 +152,7 @@ img {
 			<p style="margin-left: 50px; font-size: 33px; margin-top: 12px;">范雪蛟</p>
 			<p style="margin-left: 50px; margin-top: 12px; line-height: 30px;">
 				电话：13541227014<br /> 地址：四川省成都市郫县<br /> 毕业院校：四川托普信息技术职业学院<br />
-				就读专业：移动软件开发<br /> E- mail：www.fanxuejiao@outlook.com
+				就读专业：移动软件开发<br /> E- mail：microanswer@outlook.com
 			</p>
 			<img src='<s:home/>/bg/f.jpg' width="201" height="280"
 				style="float: right; margin-right: 40px; margin-top: -280px; display: none; border: 1px solid #000000;" />
@@ -177,7 +177,7 @@ img {
 				style="width: 3px; height: 350px; background-color: #000; float: left; display: block;"></div>
 
 			<div class="chart"
-				onclick="window.location.href=('<s:home/>/chart.jsp')">
+				onclick="window.location.href=('<s:home/>/chart.html')">
 				<p style="margin-left: 40px; margin-top: 30px; font-size: 60px;">聊天</p>
 				<p style="margin-left: 50px; font-size: 33px; margin-top: 12px;">和所有在线的用户聊天</p>
 				<p style="margin-left: 50px; margin-top: 12px; line-height: 30px;">

@@ -1,11 +1,13 @@
 package com.Answer.Servlet;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.Answer.Bean.Message;
 import com.Answer.Bean.User;
@@ -16,33 +18,36 @@ public class savemesage extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
-		String message = request.getParameter("mesg");
-		if ("".equals(message)) {
-			request.setAttribute("pagenumber", request.getParameter("pagenumber"));
-			request.getRequestDispatcher("/talk").forward(request, response);
-			return;
-		}
-		User u = (User) request.getSession().getAttribute("user");
-		int user_id=0;
-		if (u == null) {
-			user_id = 0;
+		response.setContentType("text/html");
+		response.setCharacterEncoding("UTF-8");
+		String messageContent = request.getParameter("mesg");
+		
+		if(messageContent==null || "".equals(messageContent)){
+			response.getWriter().println("请输入内容");
 		}else{
-			user_id=u.getId();
+			HttpSession session = request.getSession();
+
+			User u = (User) session.getAttribute("user");
+			
+			int user_id = 0;
+			if(u!=null){
+				user_id = u.getId();
+			}
+			
+			DataBaseManager manager = Application.getdatabaseManager(session);
+			Message msg = new Message();
+			msg.setDate(new Date().toLocaleString());
+			msg.setMessage(messageContent);
+			msg.setUser_id(user_id);
+			int addMessage = manager.addMessage(msg);
+			if(addMessage>0){
+				response.getWriter().println("留言成功");
+			}else{
+				response.getWriter().println("留言失败");
+			}
 		}
-		Message m = new Message();
-		m.setMessage(message);
-		m.setUser_id(user_id);
-//		System.out.println(message);
-		DataBaseManager manager = Application.getdatabaseManager(request
-				.getSession());
-		if (manager.addMessage(m) > 0) {
-			request.setAttribute("hint", "<a style='color:green'>留言成功</a>");
-		} else {
-			request.setAttribute("hint", "<a style='color:red'>留言失败，请稍后再试</a>");
-		}
-//		response.sendRedirect(getServletContext().getContextPath()+"/talk?pagenumber=1");
-		request.setAttribute("pagenumber", request.getParameter("pagenumber"));
-		request.getRequestDispatcher("/talk").forward(request, response);
+		
+		
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)

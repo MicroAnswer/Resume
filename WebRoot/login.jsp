@@ -97,7 +97,7 @@ a:HOVER {
 					style="margin: 20px 34px 0px 0px; height: 30px; float: right; cursor: pointer; border: 1px solid #000000;"
 					onclick="changeimg(this)" /><br /> <input type="submit" value="登录"
 					style="margin: 30px 0px 0px 90px; height: 40px; width: 100px;"
-					class="submit" />
+					class="submit" /><br/>${hint}
 			</form>
 		</s:main>
 		<s:main width="330" height="301" bgColor="rgba(255,255,255,0.2)"

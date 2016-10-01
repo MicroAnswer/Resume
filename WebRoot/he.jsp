@@ -87,7 +87,7 @@ img {
 		<p style="margin-left: 50px; font-size: 33px; margin-top: 12px;">范雪蛟</p>
 		<p style="margin-left: 50px; margin-top: 12px; line-height: 30px;">
 			电话：13541227014<br /> 地址：四川省成都市郫县<br /> 毕业院校：四川托普信息技术职业学院<br />
-			就读专业：移动软件开发<br /> E- mail：www.fanxuejiao@outlook.com
+			就读专业：移动软件开发<br /> E- mail：microanswer@outlook.com
 		</p>
 		<img src='<s:home/>/bg/f.jpg' width="201" height="280"
 			style="float: right; margin-right: 40px; margin-top: -280px; border: 1px solid #000000;" />
@@ -204,7 +204,7 @@ img {
 			</tr>
 			<tr>
 				<td colspan="4" class="tdd"><a
-					href="http://www.jingkao.net/cert/jingkaocertificates/view?certId=hJ8VgSpNcuSyOaJCA2J">2015年Java甲骨文编程大赛西南赛区一等奖</a></td>
+					 target="_blank" href="http://www.jingkao.net/cert/jingkaocertificates/view?certId=hJ8VgSpNcuSyOaJCA2J">2015年Java甲骨文编程大赛西南赛区一等奖</a></td>
 			</tr>
 			<tr>
 				<td colspan="4" class="tdd">2015年四川省计算机作品大赛二等奖</td>

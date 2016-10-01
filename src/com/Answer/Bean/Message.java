@@ -9,6 +9,13 @@ public class Message implements java.io.Serializable{
 	private int user_id;
 	private String message;
 	private String date;
+	private int floor;//楼层数
+	public int getFloor() {
+		return floor;
+	}
+	public void setFloor(int floor) {
+		this.floor = floor;
+	}
 	public int getMessage_id() {
 		return message_id;
 	}

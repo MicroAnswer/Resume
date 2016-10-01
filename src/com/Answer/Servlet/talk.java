@@ -1,12 +1,16 @@
 package com.Answer.Servlet;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.Answer.Bean.Message;
 import com.Answer.Bean.MessagePage;
 import com.Answer.Database.DataBaseManager;
 import com.Answer.Tools.Application;
@@ -37,7 +41,9 @@ public class talk extends HttpServlet {
 			int pagecount = t / messagecount + (t % messagecount == 0 ? 0 : 1);
 			page.setLastpage(pagecount);
 			page.setAllpage(pagecount);
-			page.setList(manager.getApageMessage(pagenumber, messagecount));
+			ArrayList<Message> apageMessage = manager.getApageMessage(pagenumber, messagecount);
+			Collections.reverse(apageMessage);
+			page.setList(apageMessage);
 			page.setNextpage(pagenumber >= pagecount ? pagecount : pagenumber + 1);
 			page.setUppage(pagenumber <= 1 ? 1 : pagenumber - 1);
 			page.setNowpage(pagenumber);

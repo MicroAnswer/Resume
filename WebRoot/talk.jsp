@@ -48,7 +48,74 @@ body * {
 	width: 98%;
 	margin: 10px;
 }
+
+.deletebutton {
+	background-color: #bbbbbb;
+	border-radius: 3px;
+	padding: 2px;
+	margin-left: 12px;
+	width: 16px;
+	height: 16px;
+}
+
+.deletebutton:HOVER {
+	background-color: #ff9999;
+}
+
+.deletebutton:ACTIVE {
+	background-color: #ff2222;
+}
 </style>
+<script type="text/javascript"
+	src="http://www.w3school.com.cn/jquery/jquery.js"></script>
+<script type="text/javascript">
+	//删除一条留言
+	function deleteMessage(messageId){
+		var d = confirm("你真的要删除这条留言吗？");
+		
+		if(d){
+			 $.get("<s:home/>/deletemessage?message_id="+messageId,function(data,status){
+				 alert(data);
+				 location.reload();
+			    })
+		}
+	}
+	
+	//保存留言
+	function saveMessage(){
+		var btn = $("#submitmsgbtn");
+		btn.attr("disabled", true); 
+		btn.html("提交中...");
+		
+		var msgcont = $("#mesginput").val();
+		
+		if(msgcont==""){
+			alert("请输入内容");
+			btn.html("我要留言");
+            btn.attr("disabled", false); 
+			return;
+		}
+		
+		$.ajax({
+            type: "POST",
+            url:'<s:home/>/savemesage',
+            data:$('#msgform').serialize(),// 你的formid
+            error: function(request) {
+            	btn.html("我要留言");
+                $("#resulthint").html("错误，留言失败 "+request.status).css("color","red");
+                btn.attr("disabled", false); 
+            },
+            success: function(data) {
+            	btn.html("我要留言");
+            	btn.attr("disabled", false); 
+            	$("#resulthint").html(data);
+            	location.reload();
+            }
+        });
+		
+	}
+</script>
+
 </head>
 
 <body>
@@ -59,23 +126,41 @@ body * {
 			全部${page.messagecount }条留言】</span>
 		<c:if test="${user == null }">
 			<p
-				style="color: red; width: 100%; text-align: center; margin-top: 5px;">您还没有登录，您只能进行匿名留言</p>
+				style="color: red; width: 100%; text-align: center; margin-top: 5px;">
+				您还没有登录，您只能进行匿名留言,<strong color="red">且不可删除</strong>
+			</p>
 		</c:if>
-		<form method="post" action="<s:home/>/savemesage"
+		<div
 			style="margin: 6px auto 12px auto; width: 90%; padding: 10px; height: 250px; border: #000000 solid 2px;">
-			<textarea cols="100" rows="11"
-				style="width: 100%; height: 80%; line-height: 20px; padding: 5px;"
-				name="mesg"></textarea>
-			<input name="pagenumber" value='  ${page.nowpage} '
-				style="display: none" /> <br /> <input
-				style="margin-top: 10px; width: 100px; height: 40px;" type="submit"
-				value="我要留言" />${hint}
-		</form>
+			<form method="post" id="msgform">
+				<textarea cols="100" rows="11" id="mesginput"
+					style="width: 100%; height: 80%; line-height: 20px; padding: 5px;"
+					name="mesg"></textarea>
+				<input name="pagenumber" value='  ${page.nowpage} '
+					style="display: none" />
+			</form>
+			<button id="submitmsgbtn"
+				style="margin-top: 10px; width: 100px; height: 40px; float: left;"
+				onclick="saveMessage()">我要留言</button>
+			<div id="resulthint"
+				style="float: left; height: 40px; line-height: 40px; display: block; margin-top: 10px; margin-left: 10px; font-size: 15px;">
+			</div>
+		</div>
 		<c:forEach var="m" items="${page.list}">
 			<div class="msg">
 				<p>
-					<span style="color: #995599; font-size: 20px;"><s:MessageUser
-							var="m" /></span>留言说：<span style="float: right;">${m.date }</span>
+				<div>
+					<span
+						style="font-size: 10px; height: 10px; display: block; float: left;">#</span>
+					<span
+						style="font-size: 15px; height: 18px; width: 18px; line-height: 18px;">${m.floor}楼</span>
+					<c:if test="${(user != null) && (user.id == m.user_id)}">
+						<img class="deletebutton" src="bg/delete.png"
+							onclick="javascript:deleteMessage(${m.message_id})" />
+					</c:if>
+				</div>
+				<span style="color: #995599; font-size: 20px;"><s:MessageUser
+						var="m" /></span>留言说：<span style="float: right;">${m.date }</span>
 				</p>
 				<hr />
 				<p class="msgc" style="font-size: 20px;">

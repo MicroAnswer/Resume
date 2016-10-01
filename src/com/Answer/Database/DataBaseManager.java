@@ -125,8 +125,9 @@ public class DataBaseManager {
 			stm = getsStatement();
 			Rs = stm.executeQuery(sql);
 			if (haveData(Rs)) {
+				int index = 1;
 				do {
-					m = getMessageFromResultSet(Rs);
+					m = getMessageFromResultSet(Rs, index++);
 				} while (Rs.next());
 			}
 		} catch (Exception e) {
@@ -150,16 +151,17 @@ public class DataBaseManager {
 	public ArrayList<Message> getApageMessage(int start, int count) {
 		ArrayList<Message> pm = null;
 		try {
-			String sql = "select * from message order by message_id DESC limit ? , ?";
+			String sql = "select * from message order by message_id ASC limit ? , ?";
 			con = getConnection();
 			pstm = con.prepareStatement(sql);
 			pstm.setInt(1, (start - 1) * count);
 			pstm.setInt(2, count);
 			Rs = pstm.executeQuery();
 			if (haveData(Rs)) {
+				int index = 1;
 				pm = new ArrayList<>();
 				do {
-					pm.add(getMessageFromResultSet(Rs));
+					pm.add(getMessageFromResultSet(Rs, index++));
 				} while (Rs.next());
 			}
 		} catch (Exception e) {
@@ -202,12 +204,13 @@ public class DataBaseManager {
 	public ArrayList<Message> getAllMessage() {
 		ArrayList<Message> ml = new ArrayList<>();
 		try {
-			String sql = "select * from message;";
+			String sql = "select * from message order by message_id ASC;";
 			stm = getsStatement();
 			Rs = stm.executeQuery(sql);
 			if (haveData(Rs)) {
+				int index = 1;
 				do {
-					ml.add(getMessageFromResultSet(Rs));
+					ml.add(getMessageFromResultSet(Rs, index++));
 				} while (Rs.next());
 			}
 		} catch (Exception e) {
@@ -218,11 +221,12 @@ public class DataBaseManager {
 		return ml;
 	}
 
-	private Message getMessageFromResultSet(ResultSet R) {
+	private Message getMessageFromResultSet(ResultSet R, int index) {
 		Message m = null;
 		try {
 			m = new Message();
 			m.setMessage_id(R.getInt("message_id"));
+			m.setFloor(index);
 			m.setDate(R.getString("date"));
 			String replace = R.getString("message").replace("\r\n", "<br/>").replace("\n", "<br/>");
 
