@@ -103,6 +103,7 @@ body * {
             error: function(request) {
             	btn.html("我要留言");
                 $("#resulthint").html("错误，留言失败 "+request.status).css("color","red");
+                $("#mesginput").val(msgcont);
                 btn.attr("disabled", false); 
             },
             success: function(data) {

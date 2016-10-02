@@ -40,9 +40,11 @@ public class talk extends HttpServlet {
 			page.setMessagecount(t);
 			int pagecount = t / messagecount + (t % messagecount == 0 ? 0 : 1);
 			page.setLastpage(pagecount);
+			
+			pagenumber = pagenumber>pagecount?pagecount:pagenumber;
+			
 			page.setAllpage(pagecount);
 			ArrayList<Message> apageMessage = manager.getApageMessage(pagenumber, messagecount);
-			Collections.reverse(apageMessage);
 			page.setList(apageMessage);
 			page.setNextpage(pagenumber >= pagecount ? pagecount : pagenumber + 1);
 			page.setUppage(pagenumber <= 1 ? 1 : pagenumber - 1);

@@ -36,7 +36,9 @@ public class savemesage extends HttpServlet {
 			
 			DataBaseManager manager = Application.getdatabaseManager(session);
 			Message msg = new Message();
-			msg.setDate(new Date().toLocaleString());
+			Date date = new Date();
+			String sdate = (date.getYear()+1900)+"年"+(date.getMonth()+1)+"月"+date.getDate()+"日 "+date.getHours()+":"+date.getMinutes();
+			msg.setDate("<span style=\"font-size:12px;\">"+sdate+"</span>");
 			msg.setMessage(messageContent);
 			msg.setUser_id(user_id);
 			int addMessage = manager.addMessage(msg);

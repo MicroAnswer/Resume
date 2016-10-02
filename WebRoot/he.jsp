@@ -104,7 +104,7 @@ img {
 				<td colspan="4" align="left" class="tdd">民族：汉族 政治面貌：团员</td>
 			</tr>
 			<tr>
-				<td colspan="4" align="left" class="tdd">年龄：22岁 出生日期：1992-10-10</td>
+				<td colspan="4" align="left" class="tdd">年龄：23岁 出生日期：1992-10-10</td>
 			</tr>
 			<tr>
 				<td colspan="4" align="left" class="tdd">身高：173厘米 学历：大专</td>

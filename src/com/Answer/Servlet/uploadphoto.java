@@ -24,7 +24,7 @@ import org.json.JSONObject;
 @WebServlet("/uploadphoto")
 public class uploadphoto extends HttpServlet {
 
-	private static final String DISK = "E:";
+	private static final String DISK = "D:";
 
 	private static final long serialVersionUID = 1L;
 

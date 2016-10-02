@@ -19,6 +19,17 @@ public class filedownload extends HttpServlet {
 		String FilePAth = (request.getParameter("path"));
 
 		File f = new File(FilePAth);
+		
+		if(!f.exists()){
+			f = new File("D:/Resume/software/"+f.getName());
+			if(!f.exists()){
+				response.setContentType("text/html");
+				response.setCharacterEncoding("UTF-8");
+				response.getWriter().println("无此文件");
+				return;
+			}
+		}
+		
 
 		response.setContentType("text/plain");
 		response.setHeader("Location", URLEncoder.encode(f.getName(), "UTF-8"));

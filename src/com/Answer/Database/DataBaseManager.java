@@ -100,7 +100,7 @@ public class DataBaseManager {
 			pstm = con.prepareStatement(sql);
 			pstm.setInt(1, m.getUser_id());
 			pstm.setString(2, m.getMessage());
-			pstm.setString(3, new Date().toLocaleString());
+			pstm.setString(3, m.getDate());
 			i = pstm.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -151,14 +151,14 @@ public class DataBaseManager {
 	public ArrayList<Message> getApageMessage(int start, int count) {
 		ArrayList<Message> pm = null;
 		try {
-			String sql = "select * from message order by message_id ASC limit ? , ?";
+			String sql = "select * from message order by message_id DESC limit ? , ?";
 			con = getConnection();
 			pstm = con.prepareStatement(sql);
 			pstm.setInt(1, (start - 1) * count);
 			pstm.setInt(2, count);
 			Rs = pstm.executeQuery();
 			if (haveData(Rs)) {
-				int index = 1;
+				int index = (start - 1) * count + 1;
 				pm = new ArrayList<>();
 				do {
 					pm.add(getMessageFromResultSet(Rs, index++));
@@ -204,7 +204,7 @@ public class DataBaseManager {
 	public ArrayList<Message> getAllMessage() {
 		ArrayList<Message> ml = new ArrayList<>();
 		try {
-			String sql = "select * from message order by message_id ASC;";
+			String sql = "select * from message order by message_id DESC;";
 			stm = getsStatement();
 			Rs = stm.executeQuery(sql);
 			if (haveData(Rs)) {
@@ -226,7 +226,7 @@ public class DataBaseManager {
 		try {
 			m = new Message();
 			m.setMessage_id(R.getInt("message_id"));
-			m.setFloor(index);
+			m.setFloor(m.getMessage_id());
 			m.setDate(R.getString("date"));
 			String replace = R.getString("message").replace("\r\n", "<br/>").replace("\n", "<br/>");
 
