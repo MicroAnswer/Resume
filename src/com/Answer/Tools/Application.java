@@ -3,8 +3,10 @@ package com.Answer.Tools;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpSession;
+import javax.websocket.Session;
 
 import com.Answer.Database.DataBaseManager;
+import com.Answer.Servlet.ChartServer;
 
 public class Application {
 	public static final String DatabaseManager = "databaseManager";
@@ -80,6 +82,29 @@ public class Application {
 	public static final class U {
 		public String name;
 		public String sex;
+		public ChartServer chartServer;
+		
+		
+		
+		public ChartServer getChartServer() {
+			return chartServer;
+		}
+		public void setChartServer(ChartServer chartServer) {
+			this.chartServer = chartServer;
+		}
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
+		public String getSex() {
+			return sex;
+		}
+		public void setSex(String sex) {
+			this.sex = sex;
+		}
+		
 	}
 
 }

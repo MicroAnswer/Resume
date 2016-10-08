@@ -1,104 +1,553 @@
 <html>
 <head>
-<link href="bg/fan.ico" rel="shortcut icon" />
-<meta charset="UTF-8" />
-<title>聊天</title>
-<style type="text/css">
-body {
-	background: url("bg/home_main_bg.png") repeat fixed;
-	text-align: center;
-}
+    <link href="bg/fan.ico" rel="shortcut icon"/>
+    <meta charset="UTF-8"/>
+    <title>聊天</title>
+    <style type="text/css">
+        body {
+            background: url("bg/home_main_bg.png") repeat fixed;
+            text-align: center;
+        }
 
-body * {
-	margin: 0;
-	padding: 0;
-	font-family: microsoft yahei, serif;
-	border-radius: 5px;
-}
+        body * {
+            margin: 0;
+            padding: 0;
+            font-family: microsoft yahei, serif;
+            border-radius: 0px;
+        }
 
-.boder {
-	border: solid black 1px;
-}
+        .radius0 {
+            border-radius: 0px;
+        }
 
-.centerH {
-	margin: 0 auto 0 auto;
-}
+        .boder {
+            border: solid black 1px;
+        }
 
-#title {
-	width: 980px;
-	height: 60px;
-	line-height: 60px;
-	padding-left: 20px;
-	background-color: white;
-	text-align: left;
-}
+        .centerH {
+            margin: 0 auto 0 auto;
+        }
 
-#maincontext {
-	width: 1000px;
-	height: 750px;
-	margin-top: 10px;
-	background: white;
-}
+        #title {
+            width: 980px;
+            height: 60px;
+            line-height: 60px;
+            padding-left: 20px;
+            background-color: white;
+            text-align: left;
+        }
 
-#leftcontext {
-	width: 240px;
-	height: 730px;
-	padding: 5px;
-	float: left;
-	margin-top: 5px;
-	margin-left: 5px;
-	background-color: #aaaaaa;
-	position: relative;
-}
+        #maincontext {
+            width: 1000px;
+            height: 750px;
+            margin-top: 10px;
+            background: white;
+        }
 
-#rightcontext {
-	position: relative;
-	float: left;
-	width: 735px;
-	height: 740px;
-	margin-left: 5px;
-	margin-top: 5px;
-}
+        #leftcontext {
+            width: 250px;
+            height: 740px;
+            float: left;
+            margin-top: 5px;
+            margin-left: 5px;
+            text-align: start;
+            background-color: #aaaaaa;
+            overflow-y: scroll;
+            position: relative;
+        }
 
-#chartshow {
-	width: 100%;
-	height: 550px;
-	background-color: #aaaaaa;
-}
+        #rightcontext {
+            position: relative;
+            float: left;
+            width: 735px;
+            height: 740px;
+            margin-left: 5px;
+            margin-top: 5px;
+        }
 
-#chartinput {
-	width: 100%;
-	height: 185px;
-	margin-top: 5px;
-	background-color: tan;
-}
-</style>
+        #chartshow {
+            width: 100%;
+            height: 550px;
+            background-color: #aaaaaa;
+        }
+
+        #chartinput {
+            width: 100%;
+            height: 185px;
+            margin-top: 5px;
+            background-color: tan;
+        }
+
+        #chat {
+            width: 100%;
+            height: 155px;
+            padding: 5px;
+        }
+
+        #useritem:HOVER {
+            background-color: #555555;
+        !important;
+        }
+
+        .useritem:HOVER {
+            background-color: #555555;
+        !important;
+        }
+
+        #consolebox {
+            width: 1000px;
+            height: 150px;
+            margin-top: 5px;
+            background: #aaaaaa;
+        }
+
+        #usernamedialog {
+            width: 100%;
+            height: 100%;
+            left: 0px;
+            top: 0px;
+            display: none;
+            background-color: rgba(255, 255, 255, 0.8);
+            position: absolute;
+        }
+
+    </style>
+    <script type="text/javascript" src="js/http_www.w3school.com.cn_jquery_jquery.js"></script>
+    <script type="text/javascript" src="js/map.js"></script>
+    <script type="text/javascript">
+
+        var host = "192.168.253.6:8080/";
+
+        var map = new Map();
+
+        /**
+         *
+         * 删除某节点的所有子节点
+         */
+        function removeChildren(pnode) {
+            var childs = pnode.children();
+            for (var i = childs.length - 1; i >= 0; i--) {
+                childs[i].remove();
+            }
+        }
+
+
+        function addChatItem(title, message) {
+            var chartshowhistory = $('#chartshowhistory');
+
+            var color = "black";
+
+            if ("我" != title) {
+                color = "blue";
+            }
+
+            var item = '<div style=\'color: ' + color + '; padding-left: 5px;padding-right: 5px;padding-top: 5px;\'><h3>' + title + '</h3><p>' + message + '</p></div>';
+
+            var childs = chartshowhistory.children();
+
+            if (childs.length > 100) {
+                childs[0].remove();
+                childs = chartshowhistory.children();
+            }
+
+            chartshowhistory.append(item);
+
+            if (childs.length > 0) {
+                childs[childs.length - 1].scrollIntoView(true);
+            }
+        }
+
+
+        function requestAllUser() {
+            $.ajax({
+                url: "http://" + host + "chart_all?function=allusers",
+                dataType: "json",
+                success: function (data) {
+                    Console.log(JSON.stringify(data));
+                    if (data.status) {
+                        var datas = data.data;
+                        var leftcontext = $("#leftcontext");
+                        for (var i = 0; i < datas.length; i++) {
+                            var item = datas[i];
+                            if (item.name != Chat.name)
+                                leftcontext.append("<div class='useritem' id='useritem' onclick='chartTo(this)' style='height:25px; position: relative; line-height:25px;padding-left: 6px;padding-top: 3px;padding-right: 6px;'>" + item.name + "</div><hr/>");
+                        }
+                    }
+                }
+
+
+            });
+        }
+
+        /**
+         * 有人下线
+         * @param who
+         */
+        function someOneUnline(who) {
+            if (Chat.tar == who) {
+                $("#chartTo").append("<span style='color: red;'>已下线</span>");
+            }
+            var userlist = $("#leftcontext").children();
+            for (var i = 0; i < userlist.length; i++) {
+                if (who == userlist[i].innerText) {
+                    userlist[i].remove();
+                    userlist[i + 1].remove();
+                }
+            }
+        }
+
+        /**
+         * 根据某节点内容获取某节点
+         * @param content
+         */
+        function getNodebyContent(content) {
+            var userlist = $("#leftcontext").children();
+
+            for (var i = 0; i < userlist.length; i++) {
+                if (content == userlist[i].innerText) {
+                    return userlist[i];
+                }
+            }
+            return null;
+        }
+
+
+        function containsUser(username) {
+            var userlist = $("#leftcontext").children();
+
+            for (var i = 0; i < userlist.length; i++) {
+                if (username == userlist[i].innerText) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function chartTo(who) {
+            who.style.backgroundColor = "#aaaaaa";
+//            $(who).hover(function(){
+//                $("p").css("background-color","#555555");
+//            },function(){
+//                $("p").css("background-color","#aaaaaa");
+//            });
+            if (Chat.tar == who.innerText) {
+                return;
+            } else {
+                Chat.tar = who.innerText;
+            }
+
+            removeChildren($("#chartshowhistory"));//删除所有聊天记录框里面的内容，以方便下面设置新的内容
+
+
+            //取得与某人的聊天记录
+            var chatlisthis = map.get(Chat.tar);
+
+            if (chatlisthis == null) {
+                chatlisthis = [];
+                map.put(Chat.tar, chatlisthis);
+            }
+
+
+            for (var i = 0; i < chatlisthis.length; i++) {
+                var item = chatlisthis[i];
+
+                if (item.tar == Chat.name) {
+                    addChatItem(item.src, decodeURI(item.msg));
+                } else {
+                    addChatItem("我", decodeURI(item.msg));
+                }
+
+            }
+
+
+            $("#chartto").html("与" + Chat.tar);
+        }
+
+
+        function whoChat(who) {
+            Chat.name = who.val();
+
+            if (Chat.name == '') {
+                return;
+            } else {
+
+                Chat.sex = 1;
+                $.ajax({
+                    type: "GET",
+                    url: "http://" + host + "chart_all?function=setmyinfo&chartname=" + encodeURI(Chat.name) + "&chartsex=" + encodeURI("男"),
+                    async: true,
+                    dataType: "json",
+                    success: function (data) {
+                        Console.log(JSON.stringify(data));
+                        if (data.status) {
+                            Chat.name = data.data.name;
+                            Chat.sex = data.data.sex == "男" ? 1 : 0;
+                            if (window.location.protocol == 'http:') {
+                                var addr = 'ws://' + host + 'chartserver/' + encodeURI(Chat.name) + '/' + Chat.sex;
+                                Console.log("连接：" + addr);
+                                Chat.connect(addr);
+                                $("#usernamedialog").css("display", "none");
+                            } else {
+                                Chat.connect('wss://' + host + 'chartserver/' + encodeURI(Chat.name) + '/' + Chat.sex);
+                            }
+                            requestAllUser();
+                        }
+                    }
+                });
+            }
+        }
+
+
+    </script>
+    <script type="text/javascript">
+        var Chat = {};
+
+        Chat.tar = null;
+
+        Chat.name = null;
+
+        Chat.sex = null;
+
+        Chat.socket = null;
+
+        Chat.connect = (function (host) {
+            if ('WebSocket' in window) {
+                Chat.socket = new WebSocket(host);
+            } else if ('MozWebSocket' in window) {
+                Chat.socket = new MozWebSocket(host);
+            } else {
+                Console.log('错误: 你的浏览器不支持WebSocket。');
+                return;
+            }
+
+            Chat.socket.onopen = function () {
+                Console.log('信息: WebSocket已连接。');
+            };
+
+            Chat.socket.onclose = function () {
+                Console.log('信息: WebSocket已关闭。');
+                $.ajax({
+                    url: "http://" + host + "chart_all?function=exit",
+                    dataType: "json",
+                    success: function (data) {
+                        console.log(JSON.stringify(data));
+                    }
+                });
+            };
+
+            Chat.socket.onmessage = function (message) {
+                Console.log("收到：" + JSON.stringify(message.data));
+                var jsondata = $.parseJSON(message.data);
+
+                if (jsondata.type == "msg") {
+
+                    var chartlisthis = map.get(jsondata.src);
+
+                    if (chartlisthis == null) {
+                        chartlisthis = [];
+                        map.put(jsondata.src, chartlisthis);
+                    }
+                    if (jsondata.tar == Chat.name) {
+                        chartlisthis.push(jsondata);
+                        var item = getNodebyContent(jsondata.src);
+                        if (item != null) {
+                            item.style.backgroundColor = "#22aa22";
+//                            $(item).css("background-color","#22aa22");
+//                            $(item).hover(function(){
+//                                $("p").css("background-color","#555555");
+//                            },function(){
+//                                $("p").css("background-color","#22aa22");
+//                            });
+                        }
+                    }
+                    if (jsondata.tar == Chat.name && Chat.tar == jsondata.src) {
+                        addChatItem(jsondata.src, decodeURI(jsondata.msg));
+                    } else {
+                        //消息接收对象是我，但我当前没有打开这位好友的聊天记录
+                    }
+                } else if (jsondata.type == "nus") {
+                    if (jsondata.name != Chat.name && !containsUser(jsondata.name)) {
+                        $("#leftcontext").append("<div class='useritem' id='useritem' onclick='chartTo(this)' style='height:25px; line-height:25px;padding-left: 6px;padding-top: 3px;padding-right: 6px; position: relative;'>" + jsondata.name + "</div><hr/>");
+                    }
+                } else if (jsondata.type == "uus") {//有人下线
+                    someOneUnline(jsondata.name);
+                }
+            };
+        });
+
+        Chat.initialize = function () {
+            //
+
+            $.ajax({
+                type: "GET",
+                url: "http://" + host + "chart_all?function=myinfo",
+                async: true,
+                dataType: "json",
+                success: function (data) {
+                    Console.log(JSON.stringify(data));
+                    if (data.status) {
+                        Chat.name = data.data.name;
+                        Chat.sex = data.data.sex == "男" ? 1 : 0;
+                        if (window.location.protocol == 'http:') {
+                            var addr = 'ws://' + host + 'chartserver/' + encodeURI(Chat.name) + '/' + Chat.sex;
+                            Console.log("连接：" + addr);
+                            Chat.connect(addr);
+                        } else {
+                            Chat.connect('wss://' + host + 'chartserver/' + encodeURI(Chat.name) + '/' + Chat.sex);
+                        }
+                        requestAllUser();
+                    } else {
+                        $("#usernamedialog").css("display", "block");
+                    }
+                }
+            });
+
+
+        };
+
+        Chat.sendMessage = (function () {
+            var message = document.getElementById('chat').value;
+
+
+            if (Chat.tar == null || Chat.tar == '') {
+                alert("请先选择您要和谁聊天");
+                return;
+            }
+
+
+            message = message.replace(/\n/g, "<br/>");
+
+            message = message.replace(/\r\n/g, "<br/>");
+
+            message = encodeURI(message);
+
+            if (message != '') {
+
+                var sendbtn = $('#sendbtn');
+                sendbtn.html("　 发送中 　");
+                sendbtn.css("disable", true);
+
+                var smessage = "{\"src\":\"" + Chat.name + "\",\"tar\":\"" + Chat.tar + "\",\"msg\":\"" + message + "\"}";
+
+
+                var chartlisthis = map.get(Chat.tar);
+
+                if (chartlisthis == null) {
+                    chartlisthis = [];
+                    map.put(Chat.tar, chartlisthis);
+                }
+
+                chartlisthis.push($.parseJSON(smessage));
+//
+                Console.log("发送：" + smessage);
+
+                Chat.socket.send(smessage);
+
+                addChatItem("我", decodeURI(message));
+
+                sendbtn.css("disable", false);
+                sendbtn.html("　 发送 　");
+                document.getElementById('chat').value = '';
+            }
+        });
+
+        var Console = {};
+
+        Console.log = (function (message) {
+            var console = document.getElementById('console');
+            var p = document.createElement('p');
+            p.style.wordWrap = 'break-word';
+            p.innerHTML = message + "";
+            console.appendChild(p);
+            while (console.childNodes.length > 25) {
+                console.removeChild(console.firstChild);
+            }
+            console.scrollTop = console.scrollHeight;
+        });
+
+        Chat.initialize();
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Remove elements with "noscript" class - <noscript> is not allowed in XHTML
+            var noscripts = document.getElementsByClassName("noscript");
+            for (var i = 0; i < noscripts.length; i++) {
+                noscripts[i].parentNode.removeChild(noscripts[i]);
+            }
+        }, false);
+
+
+    </script>
+
 </head>
-<div class="boder centerH" id="title">
-	聊天<a href="#" style="float: right; margin-right: 20px;"  onclick="javascript :history.back(-1)">返回主页</a>
+
+<body>
+<div class="noscript"><h2 style="color: #ff0000">您的浏览器好像还不支持Javascript，请先开启Javascript支持再刷新本页面。</h2></div>
+<div>
+
+    <div class="boder centerH" id="title">
+        <div style="float: left;">聊天</div>
+        <a href="#" style="float: right; margin-right: 20px;" onclick="javascript :history.back(-1)">返回主页</a>
+    </div>
+
+    <div id="maincontext" class="boder centerH">
+        <div id="leftcontext" class="">
+            <!--  显示所有在线的用户，点击对应用户开启对应聊天-->
+
+
+        </div>
+        <div id="rightcontext">
+            <div id="chartshow">
+                <!-- 显示聊天历史记录的位置 -->
+                <div id="chartto"
+                     style="text-align: start; width: 715px;background: #333333;color: white;padding: 10px;">聊天记录
+                </div>
+                <div id="chartshowhistory"
+                     style="overflow-y: scroll; text-align: start; width: 733px;background: white; height: 508px;"
+                     class="boder"></div>
+            </div>
+            <div id="chartinput" class="radius0">
+                <!-- 用户输入的位置 -->
+                <textarea type="text" class="radius0" style="overflow-y: scroll;" placeholder="输入消息按发送按钮发送"
+                          id="chat"></textarea>
+                <button id="sendbtn" class="radius0" style="float: left; margin: 2px; height: 25px;"
+                        onclick="Chat.sendMessage()">　 发送 　
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<div class="centerH boder radius0" id="consolebox">
+    <div class="radius0"
+         style="width: 990px;padding:5px;height: 12px;background:#555555;text-align: start; color:white;line-height: 12px;font-size: 12px;display: block;">
+        控制台
+    </div>
+    <div class="radius0"
+         style="overflow-y: scroll; background: white;text-align: start; font-size: 10px; width: 990px;height: 118px; padding: 5px;"
+         id="console">
+    </div>
 </div>
 
-<div id="maincontext" class="boder centerH">
-	<div id="leftcontext" class="">
-		<!--  显示所有在线的用户，点击对应用户开启对应聊天-->
 
-	</div>
-	<div id="rightcontext">
-		<div id="chartshow">
-			<!-- 显示聊天历史记录的位置 -->
+<div id="usernamedialog">
 
-		</div>
-		<div id="chartinput">
-			<!-- 用户输入的位置 -->
+    <div class="boder" style="width:400px; height: 200px; margin:300px auto auto auto;">
+        <div style="background-color: #333333;text-align:start;color: white; padding: 10px;">设置用户名</div>
+        <div style="width: 390px; height: 149px; text-align: start; padding: 5px;background-color: #eeeeee">
+            <p>为了能让其他用户知道您是谁，请在您的聊天开始之前先设定您的名字。<span style="font-size: 10px;">最长6个字符</span></p>
+            <input maxlength="6" id="dialog_user_name" placeholder="输入名字"
+                   style="width: 100%; height: 30px; margin-top: 10px;"/>
+            <button style="padding: 6px; margin-top: 25px; width: 100px; height: 35px;"
+                    onclick="whoChat($('#dialog_user_name'))">　确定　
+            </button>
+        </div>
 
-		</div>
+    </div>
 
-
-	</div>
 
 </div>
 
-
-
-
+</body>
 </html>

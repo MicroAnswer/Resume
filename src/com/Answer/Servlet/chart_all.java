@@ -10,6 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -33,6 +34,7 @@ public class chart_all extends HttpServlet {
 	 * 该servlet处理多个请求：不同请求通过指定不同function来区分<br/>
 	 * 共有如下功能：<br/>
 	 * <ul>
+	 * <li>online:上线</li>
 	 * <li>allusers：获取所有在线用户</li>
 	 * <li>myinfo：获取我的在线信息</li>
 	 * <li>setmyinfo：设置我的在线信息【chartname和chartsex】</li>
@@ -69,20 +71,22 @@ public class chart_all extends HttpServlet {
 			} else if ("sendto".equalsIgnoreCase(function)) {
 				// 发消息给某人
 
-				
 			} else if ("exit".equalsIgnoreCase(function)) {
 				// 退出聊天
 				result = exitU(request);
+			} else if ("online".equals(function)) {
+				// 上线
 			} else {
 				result = result.replace("服务器故障，请重试。", "非法请求。");
 			}
-			
+
 			writer.append(result).flush();
 		}
 	}
 
 	/**
 	 * 退出登录
+	 * 
 	 * @param request
 	 * @return
 	 */
@@ -92,6 +96,7 @@ public class chart_all extends HttpServlet {
 		if (u == null) {// 没有登录过的退出
 
 		} else {
+			request.getSession().removeAttribute("chart");
 			u = chartU.remove(u.name);
 		}
 		try {
@@ -180,15 +185,23 @@ public class chart_all extends HttpServlet {
 				return j.toString();
 			}
 
-			if (request.getSession().getAttribute("chart") != null) {// 一个seesion只能创建一个聊天用户
-				j.put(JSON_KET_STATUS, false);
-				j.put(JSON_KEY_MSG, "不能创建第二个账户");
+			if (request.getSession().getAttribute("chart") != null) {// 一个seesion只能创建一个聊天用户，返回已有的
+				j.put(JSON_KET_STATUS, true);
+				j.put(JSON_KEY_MSG, "获取成功");
+				JSONObject object = new JSONObject(request.getSession().getAttribute("chart"));
+				object.remove("class");
+				object.remove("chartServer");
+				j.put(JSON_KEY_DATA, object);
 				return j.toString();
 			}
 
-			if (chartU.containsKey(name)) {// 服务器已有该名称的聊天用户
+			if (chartU.containsKey(name)) {// 服务器已有该名称的聊天用户,返回已有的
 				j.put(JSON_KET_STATUS, false);
-				j.put(JSON_KEY_MSG, "该用户名已存在，请更换其它的用户名。");
+				j.put(JSON_KEY_MSG, "获取成功");
+				JSONObject object = new JSONObject(chartU.get(name));
+				object.remove("class");
+				object.remove("chartServer");
+				j.put(JSON_KEY_DATA, object);
 				return j.toString();
 			}
 
@@ -197,7 +210,10 @@ public class chart_all extends HttpServlet {
 			u.sex = (sex == null || sex.length() < 1) ? "未设置" : sex;
 			request.getSession().setAttribute("chart", u);
 			chartU.put(name, u);
-
+			JSONObject object = new JSONObject(u);
+			object.remove("class");
+			object.remove("chartServer");
+			j.put(JSON_KEY_DATA, object);
 			j.put(JSON_KET_STATUS, true);
 			j.put(JSON_KEY_MSG, "创建成功");
 			return j.toString();
@@ -217,5 +233,6 @@ public class chart_all extends HttpServlet {
 	private static final String JSON_KEY_DATA = "data";
 	private static final String JSON_KEY_NAME = "name";
 	private static final String JSON_KEY_SEX = "sex";
-	private static final String ERROR_MSG = "{\"" + JSON_KET_STATUS + "\":false,\"" + JSON_KEY_MSG + "\":\"服务器故障，请重试。\"}";
+	private static final String ERROR_MSG = "{\"" + JSON_KET_STATUS + "\":false,\"" + JSON_KEY_MSG
+			+ "\":\"服务器故障，请重试。\"}";
 }
